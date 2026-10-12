@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="ms" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      :root {
+        --santan: #fbf3dc;
+        --pandan: #1d6b34;
+        --pandan-deep: #0f3d1d;
+        --gula: #4a240c;
+        --batik: #f2c230;
+        --display: "Archivo Black", "Arial Black", sans-serif;
+        --mono: "Space Mono", "Courier New", monospace;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--pandan-deep);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--pandan-deep);
+        font-family: var(--mono);
+        color: var(--gula);
+      }
+      .clip {
+        position: absolute;
+        inset: 0;
+      }
+
+      /* ---------- footage layers ---------- */
+      .shot {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+      .shot > video,
+      .shot > img,
+      .shot > .still > img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .still {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+      .shade {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(15, 61, 29, 0.55) 0%, rgba(15, 61, 29, 0) 35%, rgba(15, 61, 29, 0) 62%, rgba(15, 61, 29, 0.6) 100%);
+      }
+      .dim {
+        position: absolute;
+        inset: 0;
+        background: rgba(15, 61, 29, 0.58);
+      }
+
+      /* ---------- type blocks ---------- */
+      .block {
+        display: block;
+        width: fit-content;
+        font-family: var(--display);
+        line-height: 1;
+        letter-spacing: -0.02em;
+        padding: 18px 30px 22px;
+        text-transform: uppercase;
+      }
+      .b-green {
+        background: var(--pandan);
+        color: var(--santan);
+      }
+      .b-cream {
+        background: var(--santan);
+        color: var(--gula);
+      }
+      .b-yellow {
+        background: var(--batik);
+        color: var(--gula);
+      }
+      .tag {
+        display: block;
+        width: fit-content;
+        font-family: var(--mono);
+        font-weight: 700;
+        font-size: 34px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 10px 20px;
+      }
+      .stack {
+        position: absolute;
+        left: 70px;
+        right: 120px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      /* hook */
+      #hook-stack {
+        top: 250px;
+      }
+      #hook-a {
+        font-size: 128px;
+      }
+      #hook-b {
+        font-size: 96px;
+      }
+      #hook-sticker {
+        position: absolute;
+        right: 140px;
+        top: 860px;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: var(--santan);
+        border: 10px solid var(--pandan);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: var(--gula);
+      }
+      #hook-sticker .big {
+        font-family: var(--display);
+        font-size: 92px;
+        line-height: 1;
+        letter-spacing: -0.03em;
+      }
+      #hook-sticker .small {
+        font-family: var(--mono);
+        font-weight: 700;
+        font-size: 40px;
+        letter-spacing: 0.1em;
+      }
+
+      /* brand lockup */
+      #brand-card {
+        position: absolute;
+        left: 90px;
+        right: 90px;
+        top: 1040px;
+        background: var(--santan);
+        padding: 46px 50px 50px;
+        border-bottom: 18px solid var(--pandan);
+      }
+      #brand-card .eyebrow {
+        font-family: var(--mono);
+        font-weight: 700;
+        font-size: 32px;
+        letter-spacing: 0.14em;
+        color: var(--pandan);
+        text-transform: uppercase;
+      }
+      #brand-card .name {
+        font-family: var(--display);
+        font-size: 124px;
+        line-height: 0.95;
+        letter-spacing: -0.03em;
+        color: var(--gula);
+        margin-top: 18px;
+      }
+      #brand-card .line {
+        display: block;
+        width: 100%;
+        height: 8px;
+        background: var(--batik);
+        margin: 26px 0 22px;
+        transform-origin: left center;
+      }
+      #brand-card .sub {
+        font-family: var(--mono);
+        font-weight: 700;
+        font-size: 38px;
+        color: var(--gula);
+      }
+
+      /* persistent brand pill */
+      #pill {
+        position: absolute;
+        left: 60px;
+        top: 120px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: var(--santan);
+        color: var(--pandan-deep);
+        padding: 12px 24px 12px 14px;
+        border-radius: 999px;
+        font-family: var(--mono);
+        font-weight: 700;
+        font-size: 30px;
+        letter-spacing: 0.04em;
+      }
+      #pill .dot {
+        display: block;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--pandan);
+        border: 6px solid var(--batik);
+      }
+
+      /* captions on venue */
+      .cap-stack {
+        top: 300px;
+      }
+      .cap-l {
+        font-size: 92px;
+      }
+      .cap-m {
+        font-size: 76px;
+      }
+
+      /* ingredients */
+      #ing-stack {
+        top: 250px;
+        gap: 18px;
+      }
+      #ing-head {
+        font-size: 80px;
+        margin-bottom: 14px;
+      }
+      .chip {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        width: fit-content;
+        background: var(--santan);
+        color: var(--gula);
+        font-family: var(--mono);
+        font-weight: 700;
+        font-size: 50px;
+        padding: 14px 32px 14px 18px;
+        border-radius: 999px;
+      }
+      .chip i {
+        display: block;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+      }
+
+      /* coverage */
+      #cov-wrap {
+        position: absolute;
+        left: 70px;
+        right: 120px;
+        top: 260px;
+      }
+      #cov-head {
+        font-size: 36px;
+        background: var(--batik);
+        color: var(--gula);
+      }
+      #cov-title {
+        font-family: var(--display);
+        font-size: 96px;
+        line-height: 0.98;
+        letter-spacing: -0.03em;
+        color: var(--santan);
+        margin: 26px 0 40px;
+        text-transform: uppercase;
+      }
+      .area {
+        display: flex;
+        align-items: center;
+        gap: 26px;
+        margin-bottom: 26px;
+      }
+      .area svg {
+        display: block;
+        width: 64px;
+        height: 80px;
+        flex: none;
+      }
+      .area span {
+        display: block;
+        font-family: var(--display);
+        font-size: 92px;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: var(--santan);
+        text-transform: uppercase;
+      }
+      #area-more span {
+        font-family: var(--mono);
+        font-weight: 700;
+        font-size: 48px;
+        color: var(--batik);
+        text-transform: none;
+        letter-spacing: 0;
+      }
+
+      /* price */
+      #price-card {
+        position: absolute;
+        left: 90px;
+        right: 90px;
+        top: 360px;
+        background: var(--santan);
+        padding: 50px 56px 56px;
+        border-top: 18px solid var(--pandan);
+        text-align: left;
+      }
+      #price-card .eyebrow {
+        font-family: var(--mono);
+        font-weight: 700;
+        font-size: 36px;
+        letter-spacing: 0.14em;
+        color: var(--pandan);
+      }
+      #price-num {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        font-family: var(--display);
+        color: var(--gula);
+        line-height: 1;
+        margin-top: 16px;
+      }
+      #price-num .cur {
+        font-size: 110px;
+      }
+      #price-num .val {
+        font-size: 240px;
+        letter-spacing: -0.04em;
+      }
+      #price-card .per {
+        font-family: var(--mono);
+        font-weight: 700;
+        font-size: 48px;
+        color: var(--gula);
+        margin-top: 4px;
+      }
+      #price-card .rule {
+        display: block;
+        width: 100%;
+        height: 6px;
+        background: var(--gula);
+        opacity: 0.2;
+        margin: 36px 0 30px;
+      }
+      #pax-row {
+        display: flex;
+        align-items: baseline;
+        gap: 18px;
+        font-family: var(--display);
+        color: var(--pandan);
+        line-height: 1;
+      }
+      #pax-row .val {
+        font-size: 150px;
+        letter-spacing: -0.04em;
+      }
+      #pax-row .unit {
+        font-family: var(--mono);
+        font-weight: 700;
+        font-size: 46px;
+        color: var(--gula);
+      }
+      #per-bowl {
+        position: absolute;
+        right: 120px;
+        top: 1300px;
+        font-size: 50px;
+        transform-origin: center center;
+      }
+
+      /* CTA */
+      #cta-head {
+        position: absolute;
+        left: 70px;
+        right: 120px;
+        top: 260px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      #cta-head .block {
+        font-size: 104px;
+      }
+      #wa-card {
+        position: absolute;
+        left: 70px;
+        right: 120px;
+        top: 1080px;
+        background: var(--santan);
+        border-radius: 40px;
+        padding: 40px 44px;
+        display: flex;
+        align-items: center;
+        gap: 34px;
+      }
+      #wa-icon {
+        display: block;
+        width: 150px;
+        height: 150px;
+        flex: none;
+      }
+      #wa-text .lbl {
+        font-family: var(--mono);
+        font-weight: 700;
+        font-size: 36px;
+        letter-spacing: 0.1em;
+        color: var(--pandan);
+      }
+      #wa-text .num {
+        font-family: var(--display);
+        font-size: 82px;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        color: var(--gula);
+        white-space: nowrap;
+      }
+      #cta-foot {
+        position: absolute;
+        left: 70px;
+        top: 1380px;
+        font-size: 38px;
+      }
+      #flash {
+        position: absolute;
+        inset: 0;
+        background: var(--santan);
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="40"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- =================== FOOTAGE (track 0-1) =================== -->
+      <!-- S1 HOOK 0-3.2: santan pour, slight slow-mo -->
+      <div class="shot" id="w1">
+        <video id="v1" class="clip" src="assets/video/santan-pour.mp4" data-start="0" data-duration="3.2" data-media-start="1.8" data-playback-rate="0.75" data-volume="0.7" data-track-index="0" playsinline data-has-audio="true"></video>
+      </div>
+      <!-- S2 BRAND 3.2-6.4: gula melaka pour -->
+      <div class="shot" id="w2">
+        <video id="v2" class="clip" src="assets/video/gula-pour-a.mp4" data-start="3.2" data-duration="3.2" data-media-start="1.3" data-volume="0.6" data-track-index="1" playsinline data-has-audio="true"></video>
+      </div>
+      <!-- S3 VENUE 6.4-8.4: Rumah Abang Jamil Seremban -->
+      <div class="shot" id="w3">
+        <video id="v3" class="clip" src="assets/video/venue-walk.mp4" data-start="6.4" data-duration="2" data-media-start="3.3" data-track-index="0" muted playsinline></video>
+      </div>
+      <!-- S4 VENUE 8.4-10: wooden arch walk-in -->
+      <div class="shot" id="w4">
+        <video id="v4" class="clip" src="assets/video/venue-walk.mp4" data-start="8.4" data-duration="1.6" data-media-start="19.6" data-track-index="1" muted playsinline></video>
+      </div>
+      <!-- S5 STALL REVEAL 10-13 -->
+      <div class="shot" id="w5">
+        <video id="v5" class="clip" src="assets/video/venue-walk.mp4" data-start="10" data-duration="3" data-media-start="32.2" data-track-index="0" muted playsinline></video>
+      </div>
+      <!-- S6 MAT AT STALL 13-16 -->
+      <div class="clip shot" id="s6" data-start="13" data-duration="3" data-track-index="1">
+        <div class="still"><img src="assets/img/mat-stall-2.jpg" alt="Mat di gerai Cendol Balang Mat" /></div>
+      </div>
+      <!-- S7 INGREDIENTS 16-19: second gula pour -->
+      <div class="shot" id="w7">
+        <video id="v7" class="clip" src="assets/video/gula-pour-b.mp4" data-start="16" data-duration="3" data-media-start="0.2" data-volume="0.6" data-track-index="0" playsinline data-has-audio="true"></video>
+      </div>
+      <!-- S8 INGREDIENTS 19-21: full balang on table -->
+      <div class="shot" id="w8">
+        <video id="v8" class="clip" src="assets/video/santan-pour.mp4" data-start="19" data-duration="2" data-media-start="12.2" data-volume="0.4" data-track-index="1" playsinline data-has-audio="true"></video>
+      </div>
+      <!-- S9 COVERAGE 21-27 -->
+      <div class="clip shot" id="s9a" data-start="21" data-duration="3" data-track-index="0">
+        <div class="still"><img src="assets/img/stall-wide.jpg" alt="Gerai Cendol Balang Mat" /></div>
+        <div class="dim"></div>
+      </div>
+      <div class="clip shot" id="s9b" data-start="24" data-duration="3" data-track-index="1">
+        <div class="still"><img src="assets/img/cendol-top.jpg" alt="Cendol dari atas" /></div>
+        <div class="dim"></div>
+      </div>
+      <!-- S10 PRICE 27-33.5 -->
+      <div class="clip shot" id="s10a" data-start="27" data-duration="3.5" data-track-index="0">
+        <div class="still"><img src="assets/img/balang-side.jpg" alt="Balang cendol" /></div>
+        <div class="shade"></div>
+      </div>
+      <div class="shot" id="w10b">
+        <video id="v10b" class="clip" src="assets/video/santan-pour.mp4" data-start="30.5" data-duration="3" data-media-start="8.2" data-volume="0.4" data-track-index="1" playsinline data-has-audio="true"></video>
+      </div>
+      <!-- S11 CTA 33.5-40 -->
+      <div class="shot" id="w11a">
+        <video id="v11a" class="clip" src="assets/video/venue-walk.mp4" data-start="33.5" data-duration="3" data-media-start="36.3" data-track-index="0" muted playsinline></video>
+      </div>
+      <div class="clip shot" id="s11b" data-start="36.5" data-duration="3.5" data-track-index="1">
+        <div class="still"><img src="assets/img/mat-stall-1.jpg" alt="Mat di gerai" /></div>
+        <div class="dim"></div>
+      </div>
+
+      <!-- =================== GRAPHICS (track 3+) =================== -->
+      <!-- hook text -->
+      <div class="clip" id="g-hook" data-start="0" data-duration="3.2" data-track-index="3">
+        <div class="stack" id="hook-stack">
+          <div class="block b-green" id="hook-a">Sebalang cendol</div>
+          <div class="block b-yellow" id="hook-b">= 200 mangkuk</div>
+        </div>
+        <div id="hook-sticker"><div class="big">RM300</div><div class="small">JE!</div></div>
+      </div>
+
+      <!-- brand lockup -->
+      <div class="clip" id="g-brand" data-start="3.2" data-duration="3.2" data-track-index="3">
+        <div id="brand-card">
+          <div class="eyebrow">Katering cendol kenduri</div>
+          <div class="name">Cendol Balang Mat</div>
+          <div class="line"></div>
+          <div class="sub">Gerai cendol untuk majlis kahwin anda</div>
+        </div>
+      </div>
+
+      <!-- persistent pill -->
+      <div class="clip" id="g-pill" data-start="6.4" data-duration="27.1" data-track-index="4">
+        <div id="pill"><span class="dot"></span>CENDOL BALANG MAT</div>
+      </div>
+
+      <!-- venue captions -->
+      <div class="clip" id="g-venue" data-start="6.4" data-duration="3.6" data-track-index="3">
+        <div class="stack cap-stack">
+          <div class="block b-cream cap-m" id="cap1">Buat kenduri</div>
+          <div class="block b-green cap-l" id="cap2">di Seremban?</div>
+        </div>
+      </div>
+      <div class="clip" id="g-stall" data-start="10" data-duration="3" data-track-index="3">
+        <div class="stack cap-stack">
+          <div class="block b-cream cap-m" id="cap3">Kami datang</div>
+          <div class="block b-green cap-l" id="cap4">set-up gerai</div>
+          <div class="block b-yellow cap-m" id="cap5">terus di majlis</div>
+        </div>
+      </div>
+      <div class="clip" id="g-mat" data-start="13" data-duration="3" data-track-index="3">
+        <div class="stack cap-stack">
+          <div class="block b-cream cap-m" id="cap6">Siap layan</div>
+          <div class="block b-green cap-l" id="cap7">tetamu anda</div>
+        </div>
+      </div>
+
+      <!-- ingredients -->
+      <div class="clip" id="g-ing" data-start="16" data-duration="5" data-track-index="3">
+        <div class="stack" id="ing-stack">
+          <div class="block b-green" id="ing-head">Dalam sebalang</div>
+          <div class="chip" id="chip1"><i style="background: #3bb54a"></i>Cendol pandan</div>
+          <div class="chip" id="chip2"><i style="background: #7a1424"></i>Kacang merah</div>
+          <div class="chip" id="chip3"><i style="background: #f2b705"></i>Jagung</div>
+          <div class="chip" id="chip4"><i style="background: #ffffff; border: 4px solid #d9cfb4"></i>Santan</div>
+          <div class="chip" id="chip5"><i style="background: #5a2a0c"></i>Gula Melaka</div>
+        </div>
+      </div>
+
+      <!-- coverage -->
+      <div class="clip" id="g-cov" data-start="21" data-duration="6" data-track-index="3">
+        <div id="cov-wrap">
+          <div class="tag" id="cov-head">Kawasan servis</div>
+          <div id="cov-title">Kami cover kenduri di</div>
+          <div class="area" id="area1"><svg viewBox="0 0 64 80"><path d="M32 2C16 2 4 14 4 29c0 20 28 49 28 49s28-29 28-49C60 14 48 2 32 2z" fill="#F2C230"/><circle cx="32" cy="29" r="10" fill="#0F3D1D"/></svg><span>Senawang</span></div>
+          <div class="area" id="area2"><svg viewBox="0 0 64 80"><path d="M32 2C16 2 4 14 4 29c0 20 28 49 28 49s28-29 28-49C60 14 48 2 32 2z" fill="#F2C230"/><circle cx="32" cy="29" r="10" fill="#0F3D1D"/></svg><span>Seremban</span></div>
+          <div class="area" id="area3"><svg viewBox="0 0 64 80"><path d="M32 2C16 2 4 14 4 29c0 20 28 49 28 49s28-29 28-49C60 14 48 2 32 2z" fill="#F2C230"/><circle cx="32" cy="29" r="10" fill="#0F3D1D"/></svg><span>Port Dickson</span></div>
+          <div class="area" id="area4"><svg viewBox="0 0 64 80"><path d="M32 2C16 2 4 14 4 29c0 20 28 49 28 49s28-29 28-49C60 14 48 2 32 2z" fill="#F2C230"/><circle cx="32" cy="29" r="10" fill="#0F3D1D"/></svg><span>Rembau</span></div>
+          <div class="area" id="area-more"><svg viewBox="0 0 64 80"><path d="M32 2C16 2 4 14 4 29c0 20 28 49 28 49s28-29 28-49C60 14 48 2 32 2z" fill="none" stroke="#F2C230" stroke-width="5"/><circle cx="32" cy="29" r="8" fill="#F2C230"/></svg><span>&amp; kawasan sekitar</span></div>
+        </div>
+      </div>
+
+      <!-- price -->
+      <div class="clip" id="g-price" data-start="27" data-duration="6.5" data-track-index="3">
+        <div id="price-card">
+          <div class="eyebrow">HARGA SEBALANG</div>
+          <div id="price-num"><span class="cur">RM</span><span class="val" id="price-val">300</span></div>
+          <div class="per">untuk satu balang penuh</div>
+          <div class="rule"></div>
+          <div id="pax-row"><span class="val">±<span id="pax-val">200</span></span><span class="unit">mangkuk / pax</span></div>
+        </div>
+        <div class="tag b-yellow" id="per-bowl">≈ RM1.50 semangkuk</div>
+      </div>
+
+      <!-- CTA -->
+      <div class="clip" id="g-cta" data-start="33.5" data-duration="6.5" data-track-index="3">
+        <div id="cta-head">
+          <div class="block b-cream" id="cta1">Tempah</div>
+          <div class="block b-green" id="cta2">sekarang!</div>
+        </div>
+        <div id="wa-card">
+          <svg id="wa-icon" viewBox="0 0 150 150">
+            <circle cx="75" cy="75" r="75" fill="#25D366" />
+            <path d="M75 30c-24.8 0-45 19.6-45 43.8 0 8.4 2.4 16.2 6.6 22.9L31 118l22-5.6c6.4 3.4 13.8 5.4 22 5.4 24.8 0 45-19.6 45-43.8S99.8 30 75 30z" fill="none" stroke="#fff" stroke-width="7" stroke-linejoin="round" />
+            <path d="M58 56c1.6-3 4-3.4 5.6-3.4 1.2 0 2.4 0 3.2 2.2l4 9.4c.6 1.6.2 3-1 4.4l-2.6 3c-.8.8-.8 2 0 3.2 3.4 5.6 8 10 13.8 13.2 1.2.6 2.4.4 3.2-.4l3.2-3.6c1.2-1.4 2.6-1.6 4.2-.8l9 4.4c1.8 1 2.2 2 2 3.6-.4 4.2-4.4 8.2-9.4 8.4-6.6.4-16.8-3.6-25-11.6-8.2-8.2-12.2-17.4-12.6-23.8-.2-3.2.6-6 1.4-8.2z" fill="#fff" />
+          </svg>
+          <div id="wa-text">
+            <div class="lbl">WHATSAPP</div>
+            <div class="num">011-1017 1993</div>
+          </div>
+        </div>
+        <div class="tag b-yellow" id="cta-foot">Tempah awal tarikh kenduri anda</div>
+      </div>
+
+      <div id="flash"></div>
+
+      <!-- =================== SFX (track 10+) =================== -->
+      <audio id="sfx-impact-hook" src="assets/sfx/impact-bass-1.mp3" data-start="0.08" data-duration="2.1" data-volume="0.55" data-track-index="10"></audio>
+      <audio id="sfx-pop-hook" src="assets/sfx/pop.mp3" data-start="0.83" data-duration="0.72" data-volume="0.5" data-track-index="11"></audio>
+      <audio id="sfx-pop-sticker" src="assets/sfx/pop.mp3" data-start="1.58" data-duration="0.72" data-volume="0.5" data-track-index="12"></audio>
+      <audio id="sfx-whoosh-1" src="assets/sfx/whoosh.mp3" data-start="3.05" data-duration="0.57" data-volume="0.45" data-track-index="10"></audio>
+      <audio id="sfx-sparkle" src="assets/sfx/sparkle.mp3" data-start="3.5" data-duration="1.8" data-volume="0.4" data-track-index="11"></audio>
+      <audio id="sfx-whoosh-2" src="assets/sfx/whoosh-short.mp3" data-start="6.3" data-duration="0.57" data-volume="0.4" data-track-index="10"></audio>
+      <audio id="sfx-pop-cap2" src="assets/sfx/pop.mp3" data-start="6.95" data-duration="0.72" data-volume="0.35" data-track-index="12"></audio>
+      <audio id="sfx-whoosh-3" src="assets/sfx/whoosh-short.mp3" data-start="8.3" data-duration="0.57" data-volume="0.35" data-track-index="11"></audio>
+      <audio id="sfx-whoosh-4" src="assets/sfx/whoosh.mp3" data-start="9.9" data-duration="0.57" data-volume="0.4" data-track-index="10"></audio>
+      <audio id="sfx-pop-cap5" src="assets/sfx/pop.mp3" data-start="10.75" data-duration="0.72" data-volume="0.35" data-track-index="12"></audio>
+      <audio id="sfx-whoosh-5" src="assets/sfx/whoosh-short.mp3" data-start="12.9" data-duration="0.57" data-volume="0.4" data-track-index="11"></audio>
+      <audio id="sfx-whoosh-6" src="assets/sfx/whoosh.mp3" data-start="15.9" data-duration="0.57" data-volume="0.4" data-track-index="10"></audio>
+      <audio id="sfx-chip-1" src="assets/sfx/pop.mp3" data-start="16.55" data-duration="0.72" data-volume="0.35" data-track-index="12"></audio>
+      <audio id="sfx-chip-2" src="assets/sfx/pop.mp3" data-start="17.05" data-duration="0.72" data-volume="0.35" data-track-index="13"></audio>
+      <audio id="sfx-chip-3" src="assets/sfx/pop.mp3" data-start="17.55" data-duration="0.72" data-volume="0.35" data-track-index="12"></audio>
+      <audio id="sfx-chip-4" src="assets/sfx/pop.mp3" data-start="18.05" data-duration="0.72" data-volume="0.35" data-track-index="13"></audio>
+      <audio id="sfx-chip-5" src="assets/sfx/pop.mp3" data-start="18.55" data-duration="0.72" data-volume="0.35" data-track-index="12"></audio>
+      <audio id="sfx-whoosh-7" src="assets/sfx/whoosh.mp3" data-start="20.9" data-duration="0.57" data-volume="0.45" data-track-index="10"></audio>
+      <audio id="sfx-area-1" src="assets/sfx/click.mp3" data-start="22.1" data-duration="0.36" data-volume="0.5" data-track-index="12"></audio>
+      <audio id="sfx-area-2" src="assets/sfx/click.mp3" data-start="22.6" data-duration="0.36" data-volume="0.5" data-track-index="13"></audio>
+      <audio id="sfx-area-3" src="assets/sfx/click.mp3" data-start="23.1" data-duration="0.36" data-volume="0.5" data-track-index="12"></audio>
+      <audio id="sfx-area-4" src="assets/sfx/click.mp3" data-start="23.6" data-duration="0.36" data-volume="0.5" data-track-index="13"></audio>
+      <audio id="sfx-area-5" src="assets/sfx/pop.mp3" data-start="24.3" data-duration="0.72" data-volume="0.4" data-track-index="12"></audio>
+      <audio id="sfx-whoosh-8" src="assets/sfx/whoosh-short.mp3" data-start="23.9" data-duration="0.57" data-volume="0.3" data-track-index="11"></audio>
+      <audio id="sfx-whoosh-9" src="assets/sfx/whoosh.mp3" data-start="26.9" data-duration="0.57" data-volume="0.45" data-track-index="10"></audio>
+      <audio id="sfx-impact-price" src="assets/sfx/impact-bass-1.mp3" data-start="28.35" data-duration="2.1" data-volume="0.5" data-track-index="11"></audio>
+      <audio id="sfx-ping-pax" src="assets/sfx/ping.mp3" data-start="30.25" data-duration="1.32" data-volume="0.4" data-track-index="12"></audio>
+      <audio id="sfx-pop-bowl" src="assets/sfx/pop.mp3" data-start="31.4" data-duration="0.72" data-volume="0.4" data-track-index="13"></audio>
+      <audio id="sfx-whoosh-10" src="assets/sfx/whoosh.mp3" data-start="33.4" data-duration="0.57" data-volume="0.45" data-track-index="10"></audio>
+      <audio id="sfx-notif" src="assets/sfx/notification.mp3" data-start="36.5" data-duration="2.45" data-volume="0.45" data-track-index="11"></audio>
+      <audio id="sfx-whoosh-11" src="assets/sfx/whoosh-short.mp3" data-start="36.35" data-duration="0.57" data-volume="0.3" data-track-index="12"></audio>
+      <audio id="sfx-click-cta" src="assets/sfx/click.mp3" data-start="37.3" data-duration="0.36" data-volume="0.5" data-track-index="13"></audio>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+
+      // ---------- footage motion: punch-in on every cut + slow drift ----------
+      const punch = (sel, t, dur, from = 1.12, to = 1.0) =>
+        tl.fromTo(sel, { scale: from }, { scale: to, duration: dur, ease: "power2.out" }, t);
+      const drift = (sel, t, dur, from = 1.0, to = 1.12, y = 0) =>
+        tl.fromTo(sel, { scale: from, yPercent: 0 }, { scale: to, yPercent: y, duration: dur, ease: "none" }, t);
+
+      drift("#w1", 0, 3.2, 1.0, 1.1);
+      punch("#w2", 3.2, 3.2, 1.15, 1.02);
+      drift("#w3", 6.4, 2.0, 1.05, 1.14);
+      punch("#w4", 8.4, 1.6, 1.12, 1.0);
+      drift("#w5", 10, 3.0, 1.0, 1.08);
+      drift("#s6 .still", 13, 3.0, 1.18, 1.04, -2);
+      punch("#w7", 16, 3.0, 1.12, 1.0);
+      drift("#w8", 19, 2.0, 1.0, 1.08);
+      drift("#s9a .still", 21, 3.0, 1.05, 1.18);
+      drift("#s9b .still", 24, 3.0, 1.2, 1.05);
+      drift("#s10a .still", 27, 3.5, 1.05, 1.16, -3);
+      punch("#w10b", 30.5, 3.0, 1.1, 1.0);
+      drift("#w11a", 33.5, 3.0, 1.0, 1.15);
+      drift("#s11b .still", 36.5, 3.5, 1.06, 1.18);
+
+      // white flash on the hook impact & the price land
+      tl.fromTo("#flash", { opacity: 0.0 }, { opacity: 0.55, duration: 0.06 }, 0.86)
+        .to("#flash", { opacity: 0, duration: 0.35, ease: "power2.out" }, 0.92)
+        .fromTo("#flash", { opacity: 0.0 }, { opacity: 0.4, duration: 0.06, immediateRender: false }, 28.36)
+        .to("#flash", { opacity: 0, duration: 0.35, ease: "power2.out" }, 28.42);
+
+      // ---------- HOOK ----------
+      tl.fromTo("#hook-a", { scale: 2.2, opacity: 0, rotation: -4 }, { scale: 1, opacity: 1, rotation: -2, duration: 0.28, ease: "back.out(2.2)" }, 0.1)
+        .fromTo("#hook-b", { xPercent: -120, opacity: 0 }, { xPercent: 0, opacity: 1, rotation: 1.5, duration: 0.32, ease: "power4.out" }, 0.85)
+        .fromTo("#hook-sticker", { scale: 0, rotation: -40 }, { scale: 1, rotation: 12, duration: 0.45, ease: "back.out(2.6)" }, 1.6)
+        .to("#hook-sticker", { scale: 1.08, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, 2.2)
+        .to("#hook-stack", { yPercent: -10, opacity: 0, duration: 0.2, ease: "power2.in" }, 3.0)
+        .to("#hook-sticker", { scale: 0.6, opacity: 0, duration: 0.2, ease: "power2.in" }, 3.0);
+
+      // ---------- BRAND ----------
+      tl.fromTo("#brand-card", { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 3.3)
+        .fromTo("#brand-card .eyebrow", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.35, ease: "power2.out" }, 3.55)
+        .fromTo("#brand-card .name", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 3.6)
+        .fromTo("#brand-card .line", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.inOut" }, 4.0)
+        .fromTo("#brand-card .sub", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 4.3)
+        .to("#brand-card", { yPercent: 40, opacity: 0, duration: 0.25, ease: "power2.in" }, 6.15);
+
+      // ---------- pill ----------
+      tl.fromTo("#pill", { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 6.5)
+        .to("#pill", { x: -60, opacity: 0, duration: 0.25, ease: "power2.in" }, 33.2);
+
+      // ---------- caption helper ----------
+      const capIn = (sel, t, dir = -1) =>
+        tl.fromTo(sel, { xPercent: 110 * dir, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 0.35, ease: "power4.out" }, t);
+      const capOut = (sel, t) => tl.to(sel, { opacity: 0, y: -24, duration: 0.2, ease: "power2.in", stagger: 0.04 }, t);
+
+      capIn("#cap1", 6.6);
+      capIn("#cap2", 6.95, 1);
+      capOut("#cap1, #cap2", 9.75);
+      capIn("#cap3", 10.15);
+      capIn("#cap4", 10.45, 1);
+      capIn("#cap5", 10.75);
+      capOut("#cap3, #cap4, #cap5", 12.75);
+      capIn("#cap6", 13.2);
+      capIn("#cap7", 13.5, 1);
+      tl.to("#cap7", { scale: 1.06, duration: 0.2, yoyo: true, repeat: 1, ease: "sine.inOut" }, 14.4);
+      capOut("#cap6, #cap7", 15.75);
+
+      // ---------- ingredients ----------
+      tl.fromTo("#ing-head", { yPercent: -60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 16.15);
+      ["#chip1", "#chip2", "#chip3", "#chip4", "#chip5"].forEach((c, i) => {
+        tl.fromTo(c, { scale: 0.3, opacity: 0, x: -40 }, { scale: 1, opacity: 1, x: 0, duration: 0.38, ease: "back.out(2)" }, 16.55 + i * 0.5);
+      });
+      tl.to("#ing-stack > *", { opacity: 0, x: -50, duration: 0.22, stagger: 0.03, ease: "power2.in" }, 20.6);
+
+      // ---------- coverage ----------
+      tl.fromTo("#cov-head", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, 21.2)
+        .fromTo("#cov-title", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 21.4);
+      ["#area1", "#area2", "#area3", "#area4"].forEach((a, i) => {
+        tl.fromTo(a + " svg", { y: -80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "bounce.out" }, 22.0 + i * 0.5)
+          .fromTo(a + " span", { xPercent: -15, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 0.3, ease: "power3.out" }, 22.1 + i * 0.5);
+      });
+      tl.fromTo("#area-more", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, 24.3)
+        .to("#cov-wrap", { opacity: 0, yPercent: -6, duration: 0.25, ease: "power2.in" }, 26.7);
+
+      // ---------- price ----------
+      const priceObj = { v: 0 };
+      const paxObj = { v: 0 };
+      const priceEl = document.getElementById("price-val");
+      const paxEl = document.getElementById("pax-val");
+      tl.fromTo("#price-card", { yPercent: 30, opacity: 0, rotation: -3 }, { yPercent: 0, opacity: 1, rotation: 0, duration: 0.45, ease: "back.out(1.6)" }, 27.15)
+        .fromTo(priceObj, { v: 0 }, { v: 300, duration: 0.9, ease: "power2.out", onUpdate: () => (priceEl.textContent = Math.round(priceObj.v)) }, 27.45)
+        .fromTo("#price-num", { scale: 1 }, { scale: 1.08, duration: 0.12, yoyo: true, repeat: 1, ease: "power2.out", transformOrigin: "left center" }, 28.35)
+        .fromTo("#pax-row", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 29.2)
+        .fromTo(paxObj, { v: 0 }, { v: 200, duration: 0.9, ease: "power2.out", immediateRender: false, onUpdate: () => (paxEl.textContent = Math.round(paxObj.v)) }, 29.3)
+        .fromTo("#per-bowl", { scale: 0, rotation: -20 }, { scale: 1, rotation: -4, duration: 0.45, ease: "back.out(2.4)" }, 31.4)
+        .to("#price-card, #per-bowl", { opacity: 0, yPercent: -8, duration: 0.25, ease: "power2.in" }, 33.2);
+
+      // ---------- CTA ----------
+      tl.fromTo("#cta1", { xPercent: -110, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 0.35, ease: "power4.out" }, 33.6)
+        .fromTo("#cta2", { xPercent: 110, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 0.35, ease: "power4.out" }, 33.85)
+        .fromTo("#wa-card", { yPercent: 80, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.5, ease: "back.out(1.4)" }, 36.45)
+        .fromTo("#wa-icon", { rotation: -30, scale: 0.4 }, { rotation: 0, scale: 1, duration: 0.5, ease: "back.out(2.5)" }, 36.6)
+        .to("#wa-card", { scale: 1.05, duration: 0.35, yoyo: true, repeat: 5, ease: "sine.inOut" }, 37.3)
+        .fromTo("#cta-foot", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 37.0);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
