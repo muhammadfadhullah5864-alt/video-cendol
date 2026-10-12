@@ -54,10 +54,26 @@ Pill jenama "CENDOL BALANG MAT" kekal di atas kiri 6.4–33.5s. Semua teks dalam
 
 ## 3. Audio
 
+**Voice-over (ElevenLabs, suara "Ashraf"):** `assets/audio/vo-ashraf.wav` (dinormalkan ke −16 LUFS), dipecah ikut jeda kepada 7 segmen:
+
+| Masa video | VO |
+|---|---|
+| 0.0–3.25 | Sebalang cendol... dapat dua ratus mangkuk! |
+| 3.3–6.9 | Ini Cendol Balang Mat. Khas untuk kenduri kahwin. |
+| 7.0–13.0 | Buat kenduri di Seremban? Kami datang ke majlis anda, set-up gerai, dan siap layan tetamu. |
+| 13.0–16.2 | (tiada VO — shot Mat, nafas) |
+| 16.2–20.8 | Cendol pandan, kacang merah, jagung, santan, dan gula Melaka. |
+| 21.3–26.2 | Kami cover Senawang, Seremban, Port Dickson, Rembau, dan kawasan sekitar. |
+| 27.3–31.7 | Sebalang cuma tiga ratus ringgit, dapat lebih kurang dua ratus mangkuk! |
+| 33.6–39.9 | Tempah sekarang. WhatsApp 011-1017 1993 (kad WhatsApp keluar 34.85s, serentak nombor disebut) |
+
+Bunyi tuang diturunkan (0.15–0.3) dan SFX diturunkan ~35% supaya suara jelas. Mix akhir: −14.3 LUFS, peak −1.5 dBFS.
+
+
 - Bunyi asal tuang santan/gula melaka dikekalkan perlahan (ASMR), klip venue di-mute (bising orang).
 - SFX dari library HyperFrames (bundled, bebas guna — lihat `assets/sfx/CREDITS.md`).
 - Loudness preview: −16.6 LUFS (sesuai untuk social).
-- **Tiada BGM** — cadangan: tambah lagu trending terus dalam TikTok/IG semasa upload, atau beri fail lagu dan saya mix + duck.
+- Masih **tiada BGM** — cadangan: tambah lagu trending terus dalam TikTok/IG semasa upload, atau beri fail lagu dan saya mix + duck.
 
 ## 4. Gaya
 
