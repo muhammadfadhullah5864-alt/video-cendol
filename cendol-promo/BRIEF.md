@@ -7,7 +7,7 @@ destination: reels-tiktok
 aspect: 1080x1920
 language: ms
 audience: Pasangan & keluarga yang merancang kenduri kahwin di Senawang, Seremban, Port Dickson, Rembau dan kawasan sekitar
-length: 40s
+length: 35s
 angle: promo
 ---
 

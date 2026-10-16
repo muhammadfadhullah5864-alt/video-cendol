@@ -1,6 +1,6 @@
-# Cendol Balang Mat — Promo 40s (Kenduri Kahwin)
+# Cendol Balang Mat — Promo 35s (Kenduri Kahwin)
 
-Format: 1080×1920 (Reels / TikTok / WhatsApp Status), 30fps, 40.0s.
+Format: 1080×1920 (Reels / TikTok / WhatsApp Status), 30fps, **35.0s** (dipendekkan dari 40s supaya VO mengalir tanpa jeda kosong).
 Status: **PREVIEW sahaja** — `preview/cendol-balang-mat-PREVIEW-540p.mp4` (draft 540p, ada watermark). Final belum di-render.
 
 ## 1. Transcript / shot log footage asal
@@ -88,3 +88,22 @@ npx hyperframes preview          # Studio (edit teks/timing dalam browser)
 npx hyperframes check            # lint + layout + contrast
 npx hyperframes render -q high -o renders/cendol-balang-mat-final.mp4   # FINAL — selepas approve
 ```
+
+## 6. Revisi: retime ke 35s (ikut VO)
+
+Versi 40s ada jeda kosong panjang dalam VO (sehingga 3.6s pada 12.8–16.4s), jadi bunyi tersekat-sekat.
+VO dipecah kepada 11 frasa dan disusun rapat (jeda 0.2–0.4s); setiap scene dipendekkan ikut VO:
+
+| Masa | Scene | VO |
+|---|---|---|
+| 0.0–3.2 | Hook santan | Sebalang cendol... dapat dua ratus mangkuk! |
+| 3.2–6.4 | Brand | Ini Cendol Balang Mat. Khas untuk kenduri kahwin. |
+| 6.4–9.3 | Venue | Buat kenduri di Seremban? Kami datang ke majlis anda, |
+| 9.3–11.0 | Gerai | set-up gerai, |
+| 11.0–12.4 | Mat | dan siap layan tetamu. |
+| 12.4–17.0 | Bahan (chip ikut perkataan) | Cendol pandan, kacang merah, jagung, santan, dan gula Melaka. |
+| 17.0–21.75 | Kawasan (pin ikut perkataan) | Kami cover Senawang, Seremban, Port Dickson, Rembau, dan kawasan sekitar. |
+| 21.75–26.1 | Harga | Sebalang cuma tiga ratus ringgit, dapat lebih kurang dua ratus mangkuk! |
+| 26.1–35.0 | CTA | Tempah sekarang. WhatsApp 011-1017 1993 (kad WhatsApp 27.95s) |
+
+Mix: −14.8 LUFS, peak −1.5 dBFS. Jadual di bahagian 2 & 3 di atas ialah versi 40s yang asal.
